@@ -1,4 +1,4 @@
-# SQL
+# SQL error 정리
 ```
 SELECT LAST + FIRST FROM tblComedian; 
 -- error : ORA-01722: invalid number
