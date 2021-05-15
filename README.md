@@ -15,4 +15,3 @@ SELECT FIRST,weight > 65 FROM tblComedian;
 ```
 - 에러원인 : 비교연산은 컬럼 리스트에 작성할 수 없다.
 - 올바른 방법 : SELECT FIRST,weight FROM tblComedian WHERE weight>65;
-```
