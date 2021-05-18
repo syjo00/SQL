@@ -86,11 +86,10 @@ NAME   |CAPITAL |POPULATION|CONTINENT|AREA|
 
 select name from tblCountry where population = max(population)
 -- SQL Error [934] [42000]: ORA-00934: group function is not allowed here
-
 ```
 - 에러원인 : 집계함수(count,sum,avg,max,min)를 허용되지 않는 위치에 사용했다.
-
 ```
+
 [DDL]
 create table tblMemo (
 
@@ -117,6 +116,7 @@ memo varchar2(1000),
 regdate DATE 
 
 );
+
 --현재 상태는 레코드를 구분할 방법이 없다.***
 INSERT into tblMemo(seq,name,memo,regdate) VALUES (1,'홍길동','메모입니다.',sysdate);
 INSERT INTO tblMemo(seq,name,memo,regdate) VALUES (2,'아무개','메모입니다.',sysdate);
@@ -159,7 +159,6 @@ INSERT INTO tblMemo(seq,name,memo,regdate) values(1,'홍길동','메모입니다
 INSERT INTO tblMemo(seq,name,memo,regdate) values(2,'아무개','메모입니다.',sysdate);
 INSERT INTO tblMemo(seq,name,memo,regdate) values(3,'홍길동','메모입니다.',sysdate);
 --ORA-00001: unique constraint (SYSTEM.SYS_C007218) violated
-
 ```
 - 에러원인 : name은 unique 때문에 값(홍길동)이 중복될 수 없다.
 
