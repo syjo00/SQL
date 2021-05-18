@@ -51,7 +51,19 @@ SELECT sum(first) FROM tblComedian;
 ```
 - 에러원인 : sum()은 sum(컬럼명)으로 입력해야 하며 컬럼의 데이터는 숫자형식이어야 한다. 
 
-
-
+```
+select jikwi, --> 이름의 이름이 뭐니? (집단)--집합데이터
+name, --> 집합데이터가 아님(개별 레코드 기준)
+count(jikwi) --> 이 그룹은 몇명이니?(집단)--집합데이터
+from tblinsa
+group by jikwi;
+-- ORA-00979: not a GROUP BY expression(name컬럼 때문에)
+```
+- 에러원인 : jikwi와 count(jikwi)컬럼은 집합데이터이지만 name컬럼은 개인데이터이기 때문에
+- [group by를 사용한 select 절에서 사용할 수 있는  표현]  1. 집계함수 2. group by한 컬럼
+             
+             
+             
+              
 
 
