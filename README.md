@@ -87,7 +87,7 @@ NAME   |CAPITAL |POPULATION|CONTINENT|AREA|
 select name from tblCountry where population = max(population)
 -- SQL Error [934] [42000]: ORA-00934: group function is not allowed here
 ```
-- 에러원인 : 집계함수(count,sum,avg,max,min)를 허용되지 않는 위치에 사용했다.
+- 에러원인 : 집계함수(count(),sum(),avg(),max(),min())를 허용되지 않는 위치에 사용했다.
 ```
 
 [DDL]
@@ -107,6 +107,7 @@ insert into tblMemo (seq,name,memo,regdate) values(1,null,'메모입니다.',sys
               
 ```
 [DDL]
+
 CREATE TABLE tblMemo(
 
 --모든 테이블에는 PK가 반드시 있어야 한다. 
@@ -126,12 +127,12 @@ INSERT into tblMemo(seq,name,memo,regdate) VALUES (1,'홍길동','메모입니�
 - 에러원인 : pk를 동일하게 하여 무결성 제약조건을 위배하였다.
 
 ```
-[DDL]
+[DDL] not null
 
 CREATE TABLE tblMemo(
 
---모든 테이블에는 PK가 반드시 있어야 한다. 
-seq number(3) PRIMARY KEY, --기본키(PK) -> 중복값을 가질 수 없다.(Unique) + NOT NULL ->완벽한 식별자
+. 
+seq number(3) not null,
 name varchar2(30),
 memo varchar2(1000),
 regdate DATE 
@@ -141,10 +142,10 @@ regdate DATE
 INSERT INTO tblMemo(seq,name,memo,regdate) VALUES (NULL,'아무개','메모입니다.',sysdate);
 --ORA-01400: cannot insert NULL into ("SYSTEM"."TBLMEMO"."SEQ")
 ```
-- 에러원인 : seq는 기본키이기 때문에 null값을 삽입할 수 없다.
+- 에러원인 : seq는 필수 입력해야 하는 값이기 때문에 null값을 삽입할 수 없다.
 
 ```
-[DDL]
+[DDL] unique
 
 CREATE TABLE tblMemo(
 
@@ -162,4 +163,23 @@ INSERT INTO tblMemo(seq,name,memo,regdate) values(3,'홍길동','메모입니다
 ```
 - 에러원인 : name은 unique 때문에 값(홍길동)이 중복될 수 없다.
 
+```
+[DDL] check
 
+DROP TABLE tblMemo;
+
+CREATE TABLE tblMemo(
+
+	seq number(3) PRIMARY KEY,
+	name varchar2(20),
+	memo varchar2(1000),
+	regdate DATE,
+	lv NUMBER NOT NULL check(lv>=1  AND lv<=5) --숫자(메모 중요도),1~5
+
+);
+
+INSERT INTO tblMemo(seq,name,memo,regdate,lv) values(1,'홍길동','메모입니다.',sysdate,1);
+INSERT INTO tblMemo(seq,name,memo,regdate,lv) values(1,'홍길동','메모입니다.',sysdate,10);
+-- ORA-02290: check constraint (SYSTEM.SYS_C007220) violated
+```
+- 에러원인 : lv의 범위는 1~5까지로 정의되었기 때문에 10은 제약조건을 위배하였다.
