@@ -89,8 +89,78 @@ select name from tblCountry where population = max(population)
 
 ```
 - 에러원인 : 집계함수(count,sum,avg,max,min)를 허용되지 않는 위치에 사용했다.
+
 ```
-             
+[DDL]
+create table tblMemo (
+
+seq number(3) not null,
+name varchar2(30) not null,
+memo varchar2(1000) null,
+regdate date null
+
+);
+
+insert into tblMemo (seq,name,memo,regdate) values(1,null,'메모입니다.',sysdate);
+--ORA-01400: cannot insert NULL into ("SYSTEM"."TBLMEMO"."NAME")
+```
+- 에러원인 : name은 not null로 필수값인데 'null'값을 삽입하려고 했기 때문에 에러가 발생했다.
               
+```
+[DDL]
+CREATE TABLE tblMemo(
+
+--모든 테이블에는 PK가 반드시 있어야 한다. 
+seq number(3) PRIMARY KEY, --기본키(PK) -> 중복값을 가질 수 없다.(Unique) + NOT NULL ->완벽한 식별자
+name varchar2(30),
+memo varchar2(1000),
+regdate DATE 
+
+);
+--현재 상태는 레코드를 구분할 방법이 없다.***
+INSERT into tblMemo(seq,name,memo,regdate) VALUES (1,'홍길동','메모입니다.',sysdate);
+INSERT INTO tblMemo(seq,name,memo,regdate) VALUES (2,'아무개','메모입니다.',sysdate);
+INSERT into tblMemo(seq,name,memo,regdate) VALUES (1,'홍길동','메모입니다.',sysdate);
+--ORA-00001: unique constraint (SYSTEM.SYS_C007216) violated
+```
+- 에러원인 : pk를 동일하게 하여 무결성 제약조건을 위배하였다.
+
+```
+[DDL]
+
+CREATE TABLE tblMemo(
+
+--모든 테이블에는 PK가 반드시 있어야 한다. 
+seq number(3) PRIMARY KEY, --기본키(PK) -> 중복값을 가질 수 없다.(Unique) + NOT NULL ->완벽한 식별자
+name varchar2(30),
+memo varchar2(1000),
+regdate DATE 
+
+);
+
+INSERT INTO tblMemo(seq,name,memo,regdate) VALUES (NULL,'아무개','메모입니다.',sysdate);
+--ORA-01400: cannot insert NULL into ("SYSTEM"."TBLMEMO"."SEQ")
+```
+- 에러원인 : seq는 기본키이기 때문에 null값을 삽입할 수 없다.
+
+```
+[DDL]
+
+CREATE TABLE tblMemo(
+
+	seq number(3) PRIMARY KEY,
+	name varchar2(30) UNIQUE, -- 중복값 금지, 식별자로는 사용할 수없다.(null값 허용)
+	memo varchar2(1000),
+	regdate DATE NULL
+	
+);
+
+INSERT INTO tblMemo(seq,name,memo,regdate) values(1,'홍길동','메모입니다.',sysdate);
+INSERT INTO tblMemo(seq,name,memo,regdate) values(2,'아무개','메모입니다.',sysdate);
+INSERT INTO tblMemo(seq,name,memo,regdate) values(3,'홍길동','메모입니다.',sysdate);
+--ORA-00001: unique constraint (SYSTEM.SYS_C007218) violated
+
+```
+- 에러원인 : name은 unique 때문에 값(홍길동)이 중복될 수 없다.
 
 
