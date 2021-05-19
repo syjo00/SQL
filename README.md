@@ -183,3 +183,24 @@ INSERT INTO tblMemo(seq,name,memo,regdate,lv) values(1,'홍길동','메모입니
 -- ORA-02290: check constraint (SYSTEM.SYS_C007220) violated
 ```
 - 에러원인 : lv의 범위는 1~5까지로 정의되었기 때문에 10은 제약조건을 위배하였다.
+
+```
+[insert]
+
+create table tblMemo (
+	
+	seq number(3) primary key,
+	name varchar2(30) default '익명' not null,
+	memo varchar2(1000) not null,
+	regdate date default sysdate null
+);
+
+insert into tblMemo(seq,name,memo,regdate) values (seqMemo.nextVal,'홍길동',sysdate);
+-- 00947. 00000 -  "not enough values"
+
+insert into tblmemo(seq,name,regdate) values (seqMemo.nextVal,'홍길동','메모입니다.',sysdate);
+--  00913. 00000 -  "too many values"
+```
+- 에러원인 : 컬럼과 값의 개수가 일치하지 않아서 발생한 에러이다.
+
+
