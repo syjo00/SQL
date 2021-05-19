@@ -203,4 +203,22 @@ insert into tblmemo(seq,name,regdate) values (seqMemo.nextVal,'홍길동','메�
 ```
 - 에러원인 : 컬럼과 값의 개수가 일치하지 않아서 발생한 에러이다.
 
+```
+[group by]
+
+select  jikwi, -- 집합데이터(그룹기준)
+	name, -- 개인데이터(개별레코드 기준)
+	count(*) -- 집합데이터(그룹기준)
+from tblinsa
+	group by jikwi;
+	
+--ORA-00979: not a GROUP BY expression
+```
+- 에러원인 : name컬럼은 개인데이터이기 때문에 select절에서 사용할 수 없다.
+- group by를 사용한 select절에서 사용할 수 있는 표현 : 집계함수, group by한 컬럼 
+
+
+
+
+
 
