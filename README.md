@@ -217,6 +217,38 @@ from tblinsa
 - 에러원인 : name컬럼은 개인데이터이기 때문에 select절에서 사용할 수 없다.
 - group by를 사용한 select절에서 사용할 수 있는 표현 : 집계함수, group by한 컬럼 
 
+```
+[alter]
+
+create table tblEdit(
+	seq number primary key,
+	data varchar2(20) not null
+);
+
+insert into tblEdit values(1,'마우스');
+insert into tblEdit values(2,'키보드');
+insert into tblEdit values(3,'모니터');
+
+-- <새로운 컬럼 추가하기> alter table tblEdit add(추가컬럼정의); 
+
+alter table tblEdit add(price number(5) null);
+--> null컬럼 추가
+
+alter table tblEdit add(description varchar2(100) not null);
+-- 1.SQL Error [1758] [42000]: ORA-01758: table must be empty to add mandatory (NOT NULL) column
+
+INSERT INTO tblEdit values(4,'올해 새롭게 출시된 초경량 노트북');
+-- 2. ORA-12899: value too large for column "SYSTEM"."TBLEDIT"."DATA" (actual: 46, maximum: 20)
+
+
+-- < 컬럼의 길이 수정하기(확장,축소) >
+alter table tblEdit modify (data varchar2(50));
+-- 3. ORA-01441 : cannot decrease column length because some value is too big
+
+```
+- 1.에러원인 : not null컬럼을 추가하기 위해서는 테이블에 데이터가 없어야 한다.
+- 2.에러원인 : data값이 너무 커서 삽입할 수 없다.
+- 3.에러원인 : value 값이 너무 크기 때문에 컬럼의 길이를 줄일 수 없다. 
 
 
 
