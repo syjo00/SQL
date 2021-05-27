@@ -250,7 +250,25 @@ alter table tblEdit modify (data varchar2(50));
 - 2.에러원인 : data값이 너무 커서 삽입할 수 없다.
 - 3.에러원인 : value 값이 너무 크기 때문에 컬럼의 길이를 줄일 수 없다. 
 
+```
+[PL-SQL]
 
+declare
 
+   vbuseo varchar2(15); -- 부서를 저장할 변수
+
+begin
+    
+   select buseo from tblInsa where name ="홍길동"; 
+   -- 1. PLS-00428: an INTO clause is expected in this SELECT statement		
+	
+   dbms_output.put_line('결과 : ' || buseo); -- ANSI/SQL 식별자
+   --2. PLS-00201 : identifier 'BUSEO' must be declared
+      
+end;
+
+```
+- 1. 에러원인 : PL/SQL 블럭 내부에서는 select의 결과를 반드시 변수에 저장해야 한다.
+- 	
 
 
