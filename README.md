@@ -300,6 +300,116 @@ end;
 - 에러원인 : PL/SQL 블럭내부에서는 ANSI-SQL의 식별자(테이블명, 컬럼명 등)를 직접 사용할 수 없다.
 
 ```
+[PL-SQL for loop]
 
+begin
+    -- i: 루프변수
+    -- in: 연결 키워드
+    -- 1 : 초깃값
+    -- ...: 증가
+    
+    for i in 1..10 loop
+    
+    dbms_output.put_line(i);
+    i:=i+1;
+    -- ※ error: PLS-00363: expression 'I' cannot be used as an assignment target.
+    
+    end loop; 
+end;
+```
+
+- 에러 원인 :  Oracle 에서 Procedure 나 Function 호출할때 인자(Parameter)를 잘못 준 경우에 발생한다.
+- 해결방법 : 아래처럼 적는다.
+
+```
+	begin
+
+		    for i in reverse 1..10 loop
+
+		         dbms_output.put_line(i);
+
+		end loop;
+	end;	
+```
+```
+[복합키]
+
+create table tblGugudan(
+
+ dan number not null primary key,
+ num number not null primary key
+ -- ※ error : ORA-02260: table can have only one primary key
+
+);
+
+```
+- 에러원인 : 한개의 테이블은 한개의 기본키만 가질 수 있다.
+- 해결방법 : 아래 처럼 적는다.
+
+```
+     1.첫번째 방법
+
+	create table tblGugudan(
+
+	dan number not null,
+	num number not null,
+	result number not null,
+
+	constraint tblGugudan_dan_num_pk primary key(dan,num) -- 복합키
+
+	);
+
+     2. 두번째 방법
+
+	create table tblGugudan(
+
+	 dan number not null,
+	 num number not null,
+	 result number not null
+
+	);   
+
+	alter table tblGugudan
+	   add constraint tblGugudan_dan_num_pk primary key(dan,num) --복합키	
+
+```
+
+```
+[예외처리부]
+
+declare
+    vnum number;
+    vname number;
+begin
+
+    dbms_output.put_line('시작');
+    
+    select name into vname from tblInsa where num =1001;
+    dbms_output.put_line(vname);
+    -- ※ 1.error : ORA-06502: PL/SQL: numeric or value error: character to number conversion error   
+    
+        vnum := 0;
+    
+    -- ※ 2.error : ORA-01476: divisor is equal to zero
+    dbms_output.put_line(100 / vnum);
+    
+    dbms_output.put_line('끝');
+
+exception   
+    
+    when VALUE_ERROR then
+        dbms_output.put_line('자료형 불일치');
+    
+    when zero_divide then
+        dbms_output.put_line('0으로 나누려고 함');
+    
+    when others then -- catch (Exception e) : 모든 종류의 예외 처리
+        dbms_output.put_line('예외처리');
+
+end;
+```
+- 1.에러원인 : 변수를 선언할 때 vname을 숫자형으로 선언했는데 name컬럼(문자형)에 넣으려고 했기 때문에
+- 2.에러원인 : 0으로 나눌 수 없다.
+    
 
 
