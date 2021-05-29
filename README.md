@@ -253,22 +253,53 @@ alter table tblEdit modify (data varchar2(50));
 ```
 [PL-SQL]
 
-declare
-
-   vbuseo varchar2(15); -- 부서를 저장할 변수
+declare 
+num number; -- 숫자형
+name varchar2(30); --문자형
+today date;--날짜형
 
 begin
+    num:=10;
+    dbms_output.put_line(num); --sysout
     
-   select buseo from tblInsa where name ="홍길동"; 
-   -- 1. PLS-00428: an INTO clause is expected in this SELECT statement		
-	
-   dbms_output.put_line('결과 : ' || buseo); -- ANSI/SQL 식별자
-   --2. PLS-00201 : identifier 'BUSEO' must be declared
-      
+    num:='홍길동';
+    dbms_output.put_line(name);
+    -- ※ error : PL/SQL: numeric or value error: character to number conversion error
+    
+    
+    today:='2021-05-26'; --리터럴 -> 암시적 형변환
+    dbms_output.put_line(today);
+    
+    today:=to_date('2021-05-26','yyyy-mm-dd'); -- FM
+    dbms_output.put_line(today);
+    
+    today:=sysdate;
+    dbms_output.put_line(today);    
+end;
+```
+- 에러 원인 : num은 숫자형이고 num에 초기화한 변수 '홍길동'은 문자형이기 때문에 위와 같은 에러가 발생했다.
+- 해결 방법 : name :='홍길동';으로 변경하면 된다.
+
+```
+[PL-SQL]
+
+declare
+vbuseo varchar2(15);
+
+begin
+
+select buseo into vbuseo from tblinsa where name = '홍길동'
+dbms_output.put_line('결과 : ' vbuseo);
+
+dbms_output.put_line('결과 : ' buseo);
+    --  ※ error : ANSI-SQL 식별자 PLS-00201: identifier 'BUSEO' must be declared
+   
 end;
 
 ```
-- 1. 에러원인 : PL/SQL 블럭 내부에서는 select의 결과를 반드시 변수에 저장해야 한다.
-- 	
+- 에러원인 : PL/SQL 블럭내부에서는 ANSI-SQL의 식별자(테이블명, 컬럼명 등)를 직접 사용할 수 없다.
+
+```
+
 
 
